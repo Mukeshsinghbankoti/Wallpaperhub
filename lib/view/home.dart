@@ -5,6 +5,9 @@ import 'package:wallpaper_hub/Api/api.dart';
 import 'package:wallpaper_hub/data/data.dart';
 import 'package:wallpaper_hub/models/categries_model.dart';
 import 'package:wallpaper_hub/models/wallpaper_model.dart';
+import 'package:wallpaper_hub/view/categories.dart';
+import 'package:wallpaper_hub/view/image_view.dart';
+import 'package:wallpaper_hub/view/search.dart';
 import 'package:wallpaper_hub/widgets/widget.dart';
 import 'package:http/http.dart' as http;
 
@@ -18,6 +21,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<CategoriesModels> categories = <CategoriesModels>[];
   List<WallpaperModel> wallpaerModlelists = [];
+
+  TextEditingController searchEditcontroller = new TextEditingController();
 
   getTrandingWallpaper() async {
     var response = await http.get(
@@ -63,11 +68,21 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     Expanded(
                       child: TextField(
+                        controller: searchEditcontroller,
                         decoration: InputDecoration(
                             hintText: "search", border: InputBorder.none),
                       ),
                     ),
-                    InkWell(child: Container(child: Icon(Icons.search)))
+                    InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SearchApp(
+                                        searchquery: searchEditcontroller.text,
+                                      )));
+                        },
+                        child: Container(child: Icon(Icons.search)))
                   ],
                 ),
               ),
@@ -104,34 +119,43 @@ class CategorieTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(right: 4),
-      child: Stack(
-        children: [
-          ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: Image.network(
-                imageUrl,
-                height: 50,
-                width: 100,
-                fit: BoxFit.cover,
-              )),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            height: 50,
-            width: 100,
-            alignment: Alignment.center,
-            child: Text(
-              title,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 15),
-            ),
-          )
-        ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    Categories(searchquery: title.toLowerCase())));
+      },
+      child: Container(
+        margin: EdgeInsets.only(right: 4),
+        child: Stack(
+          children: [
+            ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Image.network(
+                  imageUrl,
+                  height: 50,
+                  width: 100,
+                  fit: BoxFit.cover,
+                )),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              height: 50,
+              width: 100,
+              alignment: Alignment.center,
+              child: Text(
+                title,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
