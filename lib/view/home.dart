@@ -22,12 +22,10 @@ class _MyHomePageState extends State<MyHomePage> {
   getTrandingWallpaper() async {
     var response = await http.get(
         Uri.parse(
-            "https://api.pexels.com/v1/search?query=nature&per_page=20&page=1"),
+            "https://api.pexels.com/v1/search?query=nature&per_page=100&page=1"),
         headers: {"Authorization": apikey});
 
-    // print(response.body.toString());
     Map<String, dynamic> jsondata = jsonDecode(response.body);
-
     jsondata["photos"].forEach((element) {
       WallpaperModel wallpaperModel = new WallpaperModel.fromMap(element);
 
@@ -69,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             hintText: "search", border: InputBorder.none),
                       ),
                     ),
-                    Icon(Icons.search)
+                    InkWell(child: Container(child: Icon(Icons.search)))
                   ],
                 ),
               ),
